@@ -4,14 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "webpack ./public/src/script.js -o ./public/build/bundle.js --verbose --watch --mode production --output-library wbhkbot"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Taly Guryn <github.com/talyguryn>",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "connect-multiparty": "^2.1.0",
     "crypto": "^1.0.1",
     "express": "^4.16.3",
-    "node-telegram-bot-api": "^0.30.0"
+    "ngrok": "^3.0.1",
+    "node-telegram-bot-api": "^0.30.0",
+    "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "codex.ajax": "^2.3.1",
+    "get-form-data": "^2.0.0",
+    "webpack": "^4.7.0",
+    "webpack-cli": "^2.1.3"
   }
 }

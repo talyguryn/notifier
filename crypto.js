@@ -3,8 +3,10 @@ const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = config.password;
 
+/**
+ * Module for encrypting and decrypting messages with password
+ */
 class Crypto {
-
   /**
    * Encrypt target string
    * @param {string} text
@@ -30,7 +32,6 @@ class Crypto {
     dec += decipher.final('utf8');
     return dec;
   }
-
 }
 
 module.exports = Crypto;

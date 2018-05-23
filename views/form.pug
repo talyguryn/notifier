@@ -1,0 +1,33 @@
+html
+    head
+        title= 'Send a @wbhkbot message'
+        style
+            include ../public/src/style.css
+        script
+            include ../public/build/bundle.js
+    body
+        form#form(method='POST', enctype='application/x-www-form-urlencoded')
+            div
+                label(for='text') Text:
+                input#text.form-control(type='text', placeholder='Hello User' name='text')
+            div
+                | Parse mode:
+
+                input.form-control(type='radio', name='parse_mode', value='', checked="1")
+                | disabled
+
+                input.form-control(type='radio', name='parse_mode', value="Markdown")
+                | Markdown
+
+                input.form-control(type='radio', name='parse_mode', value="HTML")
+                | HTML
+            div
+                | Disable notification:
+                input#disable_notifications.form-control(type='checkbox', name='disable_notification', value='1')
+
+            div
+                | Disable web page preview:
+                input#disable_web_page_preview.form-control(type='checkbox', name='disable_web_page_preview', value='1')
+
+            button(onclick='event.preventDefault(); wbhkbot.sendForm();') Send message
+            button(onclick='event.preventDefault(); wbhkbot.generateCurl();') Generate CURL
