@@ -8,9 +8,9 @@ Send messages directly to your Telegram chat or channel via simple POST request.
 
 # TODO
 
-- [ ] add gifs or pics to readme
+- [x] add gifs or pics to readme
 - [ ] styles for form
-- [ ] adding buttons with links to form
+- [x] adding buttons with links to form
 - [x] describe api in readme
 - [x] add link to github project to bot's about
 - [x] send links for groups and channels to owner
