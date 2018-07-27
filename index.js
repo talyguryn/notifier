@@ -8,7 +8,7 @@ const Crypto = require('./crypto');
 const TelegramBot = require('node-telegram-bot-api');
 const botUpdatesUri = `/bot${config.token}`;
 const bot = new TelegramBot(config.token);
-const host = `https://${config.host}`;
+const host = config.host;
 bot.setWebHook(`${host}${botUpdatesUri}`);
 
 /** Prepare local server */
@@ -42,7 +42,7 @@ app.set('view engine', 'pug');
  *                                        https://core.telegram.org/bots/api#replykeyboardmarkup
  * @return {Promise<void>}
  */
-let sendMessage = async (chatId, message, options) => {
+let sendMessage = async (chatId, message, options = {}) => {
   /**
    * Throw error if message is empty
    */
@@ -71,11 +71,12 @@ app.post(`${botUpdatesUri}`, (req, res) => {
   res.sendStatus(200);
 });
 
-
+/**
+ * GET request handler returns form for sending message
+ */
 app.get(`/:id`, async (req, res) => {
   res.render('form')
 });
-
 
 /**
  * POST request handler
@@ -134,6 +135,13 @@ app.listen(config.port, () => {
   console.log(`Express server is listening on ${config.port}`);
 });
 
+/**
+ * Get webhook url by chatId
+ *
+ * @param {string} chatId
+ *
+ * @return {string}
+ */
 let getWebhookByChatId = (chatId) => {
   let encryptedId = Crypto.encrypt(chatId.toString());
 
@@ -142,6 +150,14 @@ let getWebhookByChatId = (chatId) => {
   return hook;
 };
 
+/**
+ * Get message with hook and bot description
+ *
+ * @param {string} hook - webhook url
+ * @param {string} title - chat title
+ *
+ * @return {string} message
+ */
 let getMessageByHook = (hook, title = '') => {
   let chatName = title ? `*${title}* channel` : 'this chat';
 
@@ -157,7 +173,7 @@ let getMessageByHook = (hook, title = '') => {
     // "• `disable_notification` (default: false) — send message silently\n" +
     // "• `reply_markup` (default: null) — add link keys to message\n" +
     "\n" +
-    "Check out [GitHub project](https://github.com/talyguryn/wbhkbot) for more params, sources, documentation or issues";
+    "Check out [GitHub project](https://github.com/talyguryn/wbhkbot) for more params, sources, and documentation.";
 
   return message;
 };
@@ -189,9 +205,9 @@ bot.onText(/\/start/, async msg => {
  * 2. Check if user can post messages to the channel
  */
 bot.on('message', async msg => {
-  try {
-    let chatId = msg.chat.id;
+  let chatId = msg.chat.id;
 
+  try {
     /**
      * Try to get channel info: {id, title, type}
      */
@@ -200,7 +216,6 @@ bot.on('message', async msg => {
     if (!channelInfo) {
       throw 'Forwarded message was not from a channel';
     }
-    // await sendMessage(chatId, JSON.stringify(channelInfo));
 
     /**
      * Get channel's admins
@@ -225,13 +240,21 @@ bot.on('message', async msg => {
      *  ...
      * ]
      */
-    let admins = await bot.getChatAdministrators(channelInfo.id);
+
+    let admins = [];
+
+    try {
+      admins = await bot.getChatAdministrators(channelInfo.id);
+    } catch (e) {
+      let message = 'Can not get list of admins for this channel. Have you added this bot to list of admins?';
+      await sendMessage(chatId, message);
+      return;
+    }
 
     /**
      * Get bot's info: {id, is_bot, first_name, username}
      */
     let botInfo = await bot.getMe();
-    // await sendMessage(chatId, JSON.stringify(botInfo));
 
     let botIsAdmin = false,
         userIsAdmin = false;
@@ -246,11 +269,15 @@ bot.on('message', async msg => {
     });
 
     if (!userIsAdmin) {
-      throw 'You have no permissions to post messages to this channel';
+      let message = 'You have no permissions to post messages to this channel.';
+      await sendMessage(chatId, message);
+      return;
     }
 
     if (!botIsAdmin) {
-      throw 'Bot has no permissions to post messages to this channel';
+      let message = 'Bot has no permissions to post messages to this channel.';
+      await sendMessage(chatId, message);
+      return;
     }
 
     let hook = getWebhookByChatId(channelInfo.id),
@@ -258,12 +285,14 @@ bot.on('message', async msg => {
         options = {
           parse_mode: 'Markdown',
           disable_web_page_preview: true,
-          reply_markup: `{\"inline_keyboard\":[[{\"text\":\"Send via web form\",\"url\":\"${hook}\"}]]}`
+          reply_markup: `{\"inline_keyboard\":[[{\"text\":\"Send message via web form\",\"url\":\"${hook}\"}]]}`
         };
 
     await sendMessage(chatId, message, options);
   } catch (e) {
     console.log(e);
+
+    await sendMessage(chatId, e.message);
   }
 });
 

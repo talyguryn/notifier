@@ -1,9 +1,9 @@
 const config = {
   /**
-   * Enter hostname without proto for your app
-   * You should have SSL-certificate for this domain
+   * Enter hostname with proto for your app
+   * You can use domain without SSL-certificate
    */
-  host: 'notifier.example.com',
+  host: 'https://notifier.example.com',
 
   /**
    * Set port for this server

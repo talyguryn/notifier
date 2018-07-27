@@ -1,6 +1,10 @@
 # Notifier
 
-Send notifications directly to your Telegram chat via simple POST request.
+Send messages directly to your Telegram chat or channel via simple POST request.
+
+![](assets/demo.gif)
+
+<!--
 
 # TODO
 
@@ -8,16 +12,28 @@ Send notifications directly to your Telegram chat via simple POST request.
 - [ ] styles for form
 - [ ] adding buttons with links to form
 - [x] describe api in readme
-- [ ] add link to github project to bot's about
+- [x] add link to github project to bot's about
 - [x] send links for groups and channels to owner
+
+-->
 
 ## How to use
 
-1. Open [chat with bot](https://t.me/wbhkbot) and run command `/start` to get a link for this chat.
+1. Open chat with bot [@wbhkbot](https://t.me/wbhkbot) and run command `/start` to get a link for this chat.
 
 You can add this bot to any group and get a webhook for that chat.
 
 2. Send POST request with params (see below) or open this link in browser to send message via form.
+
+### Webhook for a channel
+
+You can get a link to post messages to channel.
+
+1. Make sure that you have permission to post messages to target channel.
+
+2. Add bot to channel's admins list and give his access to post messages.
+
+3. Forward to chat with bot any message from the channel. You'll get a link.
  
 ## Send messages
 
@@ -34,17 +50,17 @@ Available POST params
 
 `reply_markup` used for adding links buttons to your message. See [keyboard data](https://core.telegram.org/bots/api#inlinekeyboardmarkup) in Telegram Bots API.
 
-`reply_markup` structure:
+### `reply_markup` structure with link buttons:
 
 ```json
 {
   "inline_keyboard": [
     [
-      {"text": "Row 1, Link 1", "url": "https://..."}
+      {"text": "Row 1, Link 1", "url": "https://ifmo.su"}
     ],
     [
-      {"text": "Row 2, Link 1", "url": "https://..."},
-      {"text": "Row 2, Link 2", "url": "https://..."}
+      {"text": "Row 2, Link 1", "url": "https://ifmo.su"},
+      {"text": "Row 2, Link 2", "url": "https://ifmo.su"}
     ]
   ]
 }
@@ -66,15 +82,15 @@ Text message with formatting
 ```shell
 curl -X POST https://notifier.exmaple.com/abcdefg12345678hijklmnop \
    -d "text=*Peter* just logged into the server." \
-   -d "parse_mode"
+   -d "parse_mode=Markdown"
 ```
 
-Hack for attaching image to text message. Use `Markdown` formatting and add link to some image. As a link name you can you zero-space-width symbol called "word joiner". Telegram will preload image and attach it without visible link. 😉
+Hack for attaching image to text message. Use `Markdown` formatting and add link to some image. As a link name you can you zero-space-width symbol called "word joiner". Telegram will preload image and attach it without a visible link. 😉
 
 ```shell
 curl -X POST https://notifier.exmaple.com/abcdefg12345678hijklmnop \
    -d "text=We have good news for our fans! [⁠](https://capella.pics/69256e83-66e1-449a-b0c2-5414d332e3a6)" \
-   -d "parse_mode"
+   -d "parse_mode=Markdown"
 ``` 
 
 Add button with a link
@@ -168,7 +184,7 @@ npm install ngrok -g
 ngrok http 3000
 ```
 
-Use url from ngrok (ex: `a635e24e.ngrok.io`) as a host in config file. 
+Use url from ngrok (ex: `https://a635e24e.ngrok.io`) as a host in config file. 
 
 3. Build js bundle
 
