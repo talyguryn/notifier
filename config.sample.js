@@ -1,11 +1,13 @@
 const config = {
   /**
-   * Enter hostname for your app
+   * Enter hostname with proto for your app
+   * You can use domain without SSL-certificate
    */
-  host: 'notifier.example.com',
+  host: 'https://notifier.example.com',
 
   /**
-   * Set port
+   * Set port for this server
+   * Need to have nginx or any other proxy from 443 (https) to 3000 (your port)
    */
   port: 3000,
 
@@ -17,7 +19,7 @@ const config = {
   /**
    * Telegram Bot token
    */
-  token: '',
+  token: '12345678:AAAbbbcccddd',
 };
 
 module.exports = config;

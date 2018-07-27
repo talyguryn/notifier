@@ -3,12 +3,14 @@ const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = config.password;
 
+/**
+ * Module for encrypting and decrypting messages with password
+ */
 class Crypto {
-
   /**
    * Encrypt target string
    * @param {string} text
-   * @return {IDBRequest | Promise<void> | void}
+   * @return {string}
    */
   static encrypt(text) {
     let cipher = crypto.createCipher(algorithm, password);
@@ -21,7 +23,7 @@ class Crypto {
   /**
    * Decrypt target string
    * @param {string} text
-   * @return {IDBRequest | Promise<void> | void}
+   * @return {string}
    */
   static decrypt(text){
     let decipher = crypto.createDecipher(algorithm, password);
@@ -30,7 +32,6 @@ class Crypto {
     dec += decipher.final('utf8');
     return dec;
   }
-
 }
 
 module.exports = Crypto;
