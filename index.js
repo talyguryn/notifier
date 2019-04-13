@@ -10,7 +10,7 @@ const botUpdatesUri = `/bot${config.token}`;
 
 const bot = new TelegramBot(config.token, {
   request: {
-    proxy: "http://127.0.0.1:1234",
+    proxy: "socks5://sox.ctf.su:1080",
   },
 });
 
