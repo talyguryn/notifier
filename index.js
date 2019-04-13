@@ -6,11 +6,16 @@ const Crypto = require('./crypto');
 
 /** Prepare Telegram bot */
 const TelegramBot = require('node-telegram-bot-api');
+const Agent = require('socks5-https-client/lib/Agent');
 const botUpdatesUri = `/bot${config.token}`;
 
 const bot = new TelegramBot(config.token, {
   request: {
-    proxy: "socks5://sox.ctf.su:1080",
+    agentClass: Agent,
+    agentOptions: {
+      socksHost: 'sox.ctf.su',
+      socksPort: 1080,
+    }
   },
 });
 

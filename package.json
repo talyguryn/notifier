@@ -14,7 +14,8 @@
     "crypto": "^1.0.1",
     "express": "^4.16.3",
     "node-telegram-bot-api": "^0.30.0",
-    "pug": "^2.0.3"
+    "pug": "^2.0.3",
+    "socks5-https-client": "^1.2.1"
   },
   "devDependencies": {
     "codex.ajax": "^2.3.1",
