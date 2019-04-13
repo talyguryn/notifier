@@ -7,7 +7,13 @@ const Crypto = require('./crypto');
 /** Prepare Telegram bot */
 const TelegramBot = require('node-telegram-bot-api');
 const botUpdatesUri = `/bot${config.token}`;
-const bot = new TelegramBot(config.token);
+
+const bot = new TelegramBot(config.token, {
+  request: {
+    proxy: "http://127.0.0.1:1234",
+  },
+});
+
 const host = config.host;
 bot.setWebHook(`${host}${botUpdatesUri}`);
 
